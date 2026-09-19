@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_80">#D0BCFF</color>
+    <color name="purple_grey_80">#CCC2DC</color>
+    <color name="pink_80">#EFB8C8</color>
+
+    <color name="metal_gold">#FFD700</color>
+    <color name="metal_orange">#FF9800</color>
+    <color name="metal_red">#F44336</color>
+    <color name="metal_green">#4CAF50</color>
+    <color name="metal_bg_dark">#0F141C</color>
+    <color name="metal_surface_dark">#1A2230</color>
+</resources>
