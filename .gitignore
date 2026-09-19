@@ -1,0 +1,18 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+output.json
+
+# Web demo node_modules & dist
+web-demo/node_modules/
+web-demo/dist/
