@@ -201,6 +201,59 @@ fun DetectorScreen(
                 }
             }
 
+            // Distance & Vector Anomaly Radar Card
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        "ADVANCED DETECTION INDICATION",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = AccentGold,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text("Estimated Distance", color = Color.Gray, fontSize = 11.sp)
+                            Text(
+                                text = if (currentState.isTriggered) String.format(Locale.US, "≈ %.1f cm", currentState.estimatedDistanceCm) else "> 20 cm (Clear)",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Black,
+                                color = if (currentState.isTriggered) AccentGold else Color.LightGray
+                            )
+                        }
+
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text("Depth Classification", color = Color.Gray, fontSize = 11.sp)
+                            Text(
+                                text = currentState.depthCategory,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = AccentCyan
+                            )
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(DarkSurfaceElevated, RoundedCornerShape(8.dp))
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Vector Orientation:", color = Color.Gray, fontSize = 11.sp)
+                        Text(currentState.dominantAxis.label, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 11.sp)
+                    }
+                }
+            }
+
             // Diagnostic & Baseline Info Card
             Card(
                 colors = CardDefaults.cardColors(containerColor = DarkSurface),

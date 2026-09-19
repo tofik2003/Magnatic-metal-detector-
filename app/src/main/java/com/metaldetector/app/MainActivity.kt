@@ -27,6 +27,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var magnetometerReader: MagnetometerReader
     private lateinit var alertSoundManager: AlertSoundManager
     private lateinit var historyRepository: ScanHistoryRepository
+    private lateinit var pinsRepository: SavedPinsRepository
     private val detectionEngine = DetectionEngine()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +36,15 @@ class MainActivity : ComponentActivity() {
         magnetometerReader = MagnetometerReader(this)
         alertSoundManager = AlertSoundManager(this)
         historyRepository = ScanHistoryRepository(this)
+        pinsRepository = SavedPinsRepository(this)
 
         val isSensorAvailable = magnetometerReader.isSensorAvailable()
         val sensorInfo = magnetometerReader.getSensorInfo()
 
         setContent {
-            MetalDetectorTheme {
+            var currentThemeMode by remember { mutableStateOf(AppThemeMode.TACTICAL_CYBER) }
+
+            MetalDetectorTheme(themeMode = currentThemeMode) {
                 val navController = rememberNavController()
 
                 var currentReading by remember {
@@ -58,6 +62,9 @@ class MainActivity : ComponentActivity() {
                 var scanRecords by remember {
                     mutableStateOf(historyRepository.getAllRecords())
                 }
+                var savedPins by remember {
+                    mutableStateOf(pinsRepository.getAllPins())
+                }
 
                 // Collect sensor readings
                 LaunchedEffect(Unit) {
@@ -70,7 +77,7 @@ class MainActivity : ComponentActivity() {
                             // Update audio and haptics
                             alertSoundManager.updateAlert(state.alertLevel, state.signalStrengthPercent)
 
-                            // Keep rolling window for live graph (last 40 samples ~ 1.3 seconds)
+                            // Keep rolling window for live graph
                             graphHistory.add(state.filteredMagnitude)
                             if (graphHistory.size > 45) {
                                 graphHistory.removeAt(0)
@@ -121,6 +128,26 @@ class MainActivity : ComponentActivity() {
                                     )
                                     historyRepository.saveRecord(newRecord)
                                     scanRecords = historyRepository.getAllRecords()
+                                },
+                                onBack = { navController.popBackStack() }
+                            )
+                        }
+
+                        composable("pins") {
+                            SmartPinsScreen(
+                                currentState = currentState,
+                                pins = savedPins,
+                                onSavePin = { pin ->
+                                    pinsRepository.savePin(pin)
+                                    savedPins = pinsRepository.getAllPins()
+                                },
+                                onDeletePin = { id ->
+                                    pinsRepository.deletePin(id)
+                                    savedPins = pinsRepository.getAllPins()
+                                },
+                                onClearPins = {
+                                    pinsRepository.clearAllPins()
+                                    savedPins = emptyList()
                                 },
                                 onBack = { navController.popBackStack() }
                             )
@@ -181,6 +208,8 @@ class MainActivity : ComponentActivity() {
 
                         composable("settings") {
                             SettingsScreen(
+                                currentTheme = currentThemeMode,
+                                onSelectTheme = { currentThemeMode = it },
                                 isSoundEnabled = isSoundEnabled,
                                 isVibrationEnabled = isVibrationEnabled,
                                 onToggleSound = { enabled ->

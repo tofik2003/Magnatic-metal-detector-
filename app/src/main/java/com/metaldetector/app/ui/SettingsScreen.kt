@@ -20,6 +20,8 @@ import com.metaldetector.app.ui.theme.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    currentTheme: AppThemeMode,
+    onSelectTheme: (AppThemeMode) -> Unit,
     isSoundEnabled: Boolean,
     isVibrationEnabled: Boolean,
     onToggleSound: (Boolean) -> Unit,
@@ -50,6 +52,40 @@ fun SettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Theme Selector Card
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        "VISUAL THEMES & PALETTES",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = AccentGold,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    AppThemeMode.values().forEach { mode ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onSelectTheme(mode) }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = currentTheme == mode,
+                                onClick = { onSelectTheme(mode) },
+                                colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colorScheme.primary)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(mode.displayName, color = Color.White, fontSize = 13.sp, fontWeight = if (currentTheme == mode) FontWeight.Bold else FontWeight.Normal)
+                        }
+                    }
+                }
+            }
+
             // Alert Preferences
             Card(
                 colors = CardDefaults.cardColors(containerColor = DarkSurface),

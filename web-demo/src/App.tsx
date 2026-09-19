@@ -47,11 +47,37 @@ interface ScanRecord {
   durationSeconds: number;
 }
 
-type ScreenType = 'home' | 'calibration' | 'detector' | 'grid' | 'history' | 'settings' | 'unsupported';
+type ScreenType = 'home' | 'calibration' | 'detector' | 'grid' | 'history' | 'settings' | 'unsupported' | 'pins';
+
+interface DetectionPin {
+  id: string;
+  title: string;
+  surfaceType: string;
+  timestamp: number;
+  peakMicroTesla: number;
+  estimatedDistanceCm: number;
+  relativeDepthCategory: string;
+  notes: string;
+}
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('home');
+  const [currentTheme, setCurrentTheme] = useState<'cyber' | 'gold' | 'emerald' | 'crimson'>('cyber');
   const [deviceSensorAvailable, setDeviceSensorAvailable] = useState<boolean>(true);
+
+  // Saved pins
+  const [savedPins, setSavedPins] = useState<DetectionPin[]>([
+    {
+      id: 'pin-1',
+      title: 'Drywall Rebar Stud #2',
+      surfaceType: 'Drywall',
+      timestamp: Date.now() - 3600000 * 3,
+      peakMicroTesla: 76.5,
+      estimatedDistanceCm: 3.2,
+      relativeDepthCategory: 'Shallow (2.5 - 6.5 cm)',
+      notes: '15 cm above electrical conduit'
+    }
+  ]);
 
   // Simulation controls (for testing without live physical compass in browser)
   const [targetDistanceCm, setTargetDistanceCm] = useState<number>(15); // 0 to 20 cm

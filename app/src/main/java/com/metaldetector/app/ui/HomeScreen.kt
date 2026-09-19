@@ -202,6 +202,15 @@ fun HomeScreen(
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 ModeCard(
+                    title = "Smart Pins",
+                    subtitle = "Remember Locations",
+                    icon = Icons.Default.AddLocation,
+                    accentColor = AccentOrange,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    onNavigate("pins")
+                }
+                ModeCard(
                     title = "Calibration",
                     subtitle = "Ambient Baseline",
                     icon = Icons.Default.Tune,
@@ -210,14 +219,26 @@ fun HomeScreen(
                 ) {
                     onNavigate("calibration")
                 }
+            }
+
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 ModeCard(
                     title = "Scan History",
                     subtitle = "Saved Logs",
                     icon = Icons.Default.History,
-                    accentColor = AccentOrange,
+                    accentColor = Color(0xFFA855F7),
                     modifier = Modifier.weight(1f)
                 ) {
                     onNavigate("history")
+                }
+                ModeCard(
+                    title = "Theme & Options",
+                    subtitle = "Color & Settings",
+                    icon = Icons.Default.Palette,
+                    accentColor = AccentCyan,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    onNavigate("settings")
                 }
             }
 
